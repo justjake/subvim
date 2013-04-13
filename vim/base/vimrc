@@ -7,6 +7,7 @@ if isdirectory(expand("$HOME/.vim/custom/"))
   source $HOME/.vim/custom/vimrc
 endif
 execute pathogen#helptags()
+
 syntax on
 filetype plugin indent on
 
@@ -45,13 +46,15 @@ set smartcase                   " ... but not when search pattern contains upper
 " ----------------------------------------------"
 " MacVim modifications (color, shortcuts, etc.. "
 " ----------------------------------------------"
+"http://stackoverflow.com/questions/14802689/macvim-wont-load-specific-color-scheme-by-default
+let macvim_skip_colorscheme=1
+let g:molokai_original=1
 colorscheme molokai
-let g:molokai_original = 1
 highlight SignColumn guibg=#272822   
 
 if has("gui_macvim")
   " No toolbars, menu or scrollbars in the GUI
-  set guifont=Source\ Code\ Pro\ for\ Powerline:h13
+  set guifont=Source\ Code\ Pro\ for\ Powerline:h13 "TODO: include these fonts by default
   set clipboard+=unnamed
   set vb t_vb=
   set guioptions-=m  "no menu
@@ -62,20 +65,19 @@ if has("gui_macvim")
   set guioptions-=R
 
   " Open ctrlp with cmd+p
-  macmenu File.Print key=<nop>
   let g:ctrlp_map = '<D-p>'
 
-  " Open Go to symbol (via tags)
+  " Open goto symbol on current buffer
   nmap <D-r> :MyCtrlPTag<cr>
+  imap <D-r> <esc>:MyCtrlPTag<cr>
+
+  " Open goto symbol on all buffers
   nmap <D-R> :CtrlPBufTagAll<cr>
+  imap <D-R> <esc>:CtrlPBufTagAll<cr>
 
-  " Go to file
-  macm File.New\ Tab key=<nop>
+  " Open goto file
   nmap <D-t> :CtrlP<cr>
-
-  " Move  with cmd+alt
-  nmap <D-M-RIGHT> gt
-  nmap <D-M-LEFT> gT
+  imap <D-t> <esc>:CtrlP<cr>
 
   " Comment lines with cmd+/
   map <D-/> :TComment<cr>
@@ -90,26 +92,36 @@ if has("gui_macvim")
   "Open sidebar with cmd+k
   map <D-k> :NERDTreeTabsToggle<CR>
 
-  "switch between tabs with cmd+1, cmd+2,..."
-  map <D-1> :tabfirst<Cr>
-  map <D-2> :tabfirst<Cr>gt
-  map <D-3> :tabfirst<Cr>3gt
-  map <D-4> :tabfirst<Cr>4gt
-  map <D-5> :tabfirst<Cr>5gt
-  map <D-6> :tabfirst<Cr>6gt
-  map <D-7> :tabfirst<Cr>7gt
-  map <D-8> :tabfirst<Cr>8gt
-  map <D-9> :tabfirst<Cr>9gt
+  " This mapping makes Ctrl-Tab switch between tabs. 
+  " Ctrl-Shift-Tab goes the other way.
+  noremap <C-Tab> :tabnext<CR>
+  noremap <C-S-Tab> :tabprev<CR>
 
-  imap <D-1> <esc>:tabfirst<Cr>
-  imap <D-2> <esc>:tabfirst<Cr>gt
-  imap <D-3> <esc>:tabfirst<Cr>3gt
-  imap <D-4> <esc>:tabfirst<Cr>4gt
-  imap <D-5> <esc>:tabfirst<Cr>5gt
-  imap <D-6> <esc>:tabfirst<Cr>6gt
-  imap <D-7> <esc>:tabfirst<Cr>7gt
-  imap <D-8> <esc>:tabfirst<Cr>8gt
-  imap <D-9> <esc>:tabfirst<Cr>9gt
+  " switch between tabs with cmd+1, cmd+2,..."
+  map <D-1> 1gt
+  map <D-2> 2gt
+  map <D-3> 3gt
+  map <D-4> 4gt
+  map <D-5> 5gt
+  map <D-6> 6gt
+  map <D-7> 7gt
+  map <D-8> 8gt
+  map <D-9> 9gt
+
+  " until we have default MacVim shortcuts this is the only way to use it in
+  " insert mode
+  imap <D-1> <esc>1gt
+  imap <D-2> <esc>2gt
+  imap <D-3> <esc>3gt
+  imap <D-4> <esc>4gt
+  imap <D-5> <esc>5gt
+  imap <D-6> <esc>6gt
+  imap <D-7> <esc>7gt
+  imap <D-8> <esc>8gt
+  imap <D-9> <esc>9gt
+
+  " Select text whit shift
+  let macvim_hig_shift_movement = 1
 
   " Stop completion with enter, in addition to default ctrl+y
   imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
